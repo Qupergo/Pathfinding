@@ -1,0 +1,28 @@
+body {
+    margin: 0;
+}
+
+table tr td:hover {
+    background-color: #424949;
+}
+
+.removing tr td:hover {
+    background-color: #424949;
+}
+
+
+.wall {
+    transition: transform 100ms ease;
+    background-color: #424949;
+}
+
+.icon {
+    width:auto;
+    height:30px;
+}
+
+.flex {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
