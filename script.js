@@ -96,14 +96,16 @@ async function dijkstra () {
             distances[current_id] = Infinity;
         }
     }
-
+    nodes = Array.from(nodes);
     let iter = 0;
+
     while (true) {
         iter++;
-        //Select current node
-        nodes = document.querySelectorAll(".unvisited");
+        
         let shortest_distance = Infinity;
         let selected_node;
+        
+        //Select current node
         for (let index = 0; index < nodes.length; index++) {
             selected_node = nodes[index];
             const id = nodes[index].id;
@@ -111,8 +113,10 @@ async function dijkstra () {
             if (distances[id] < shortest_distance) {
                 shortest_distance = distances[id]
                 node = selected_node;
+                console.log(node.id);
             }
         }
+
         const current_pos = node.id.split("_");
         const current_id = node.id;
         let neighbor_nodes = neighboring_nodes(current_pos, "unvisited");
@@ -128,6 +132,13 @@ async function dijkstra () {
                 distances[cur_id] = current_distance;
             }
         }
+
+
+        if (node.classList.contains("visiting")) {
+            node.classList.remove("visiting");
+        }
+        node.classList.remove("unvisited");
+        node.classList.add("visited");
 
         if (node.classList.contains("end")) {
 
@@ -157,14 +168,9 @@ async function dijkstra () {
                 node.classList.add("path");
             }
         }
-
-        if (node.classList.contains("visiting")) {
-            node.classList.remove("visiting");
-        }
-        node.classList.remove("unvisited");
-        node.classList.add("visited");
+        
+        nodes.remove(node);
         await sleep(0)
-
     }
 }
 
@@ -204,6 +210,17 @@ function neighboring_nodes(pos, find_with) {
     }
     return squares;
 }
+
+Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
 
 let table = create_grid();
 

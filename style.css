@@ -20,7 +20,10 @@ table tr td:hover {
 }
 
 .visiting {
-    background-color: #E6FDFF;
+    transition: transform 100ms ease;
+    transform: scale(0.5);
+    background-color: #DAA49A;
+
 }
 
 .path {
@@ -32,6 +35,13 @@ table tr td:hover {
 
 .end {
     background-color: inherit;
+    background-image: url(images/end.png);
     background-size: contain;
 
 }
+
+.start {
+    background-image: url(images/start.png);
+    background-size: contain;
+}
+
