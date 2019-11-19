@@ -10,16 +10,22 @@ table tr td:hover {
     background-color: #424949;
 }
 
-
 .wall {
+
     transition: transform 100ms ease;
     background-color: #424949;
 }
 
-.marked {
+.visited {
     background-color: #DBF9F4;
 }
 
-.outer_marked {
+.visiting {
     background-color: #E6FDFF;
+}
+
+.path {
+    transition: transform 100ms ease;
+    transform: scale(0.5);
+    background-color: #822E81 !important;
 }

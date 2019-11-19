@@ -43,12 +43,12 @@ function create_grid() {
 
             //Place start node
             if (x == 10 && y == 20) {
-                td.className = "bg-info start";
+                td.className = "bg-info start unvisited";
             }
 
             //Place end node
             if (x == 30 && y == 20) {
-                td.className = "bg-danger end";
+                td.className = "bg-danger end unvisited";
             }
             td.id = x + "_" + y;
         }
@@ -73,41 +73,111 @@ function place_object (td, type, isRightClick, clicked=false) {
     }
 }
 
-function find_path (algorithm) {
+async function dijkstra () {
     let start = document.querySelector(".start");
     let end = document.querySelector(".end");
 
-    unvisited_nodes = document.querySelectorAll(".unvisited");
+    nodes = document.querySelectorAll(".unvisited");
 
     start_pos = start.id.split("_");
-    id = start.id
+    id = start.id;
 
-    let unvisited_distances = {id:0}
+    let distances = {};
 
-    for (let index = 0; index < unvisited_nodes.length; index++) {
+    for (let index = 0; index < nodes.length; index++) {
         
-        const node = unvisited_nodes[index];
-        let current_pos = node.id.split("_");
+        const node = nodes[index];
         let current_id = node.id;
+        if (node.classList.contains("start"))
+        {
+            distances[current_id] = 0;
+        }
+        else {
+            distances[current_id] = Infinity;
+        }
+    }
 
-        unvisited_distances.current_id = distance(start_pos, current_pos);
-        let neighbor_nodes = neighboring_nodes(current_pos);
+    let iter = 0;
+    while (true) {
+        iter++;
+        //Select current node
+        nodes = document.querySelectorAll(".unvisited");
+        let shortest_distance = Infinity;
+        let selected_node;
+        for (let index = 0; index < nodes.length; index++) {
+            selected_node = nodes[index];
+            const id = nodes[index].id;
+
+            if (distances[id] < shortest_distance) {
+                shortest_distance = distances[id]
+                node = selected_node;
+            }
+        }
+        const current_pos = node.id.split("_");
+        const current_id = node.id;
+        let neighbor_nodes = neighboring_nodes(current_pos, "unvisited");
 
         for (let jndex = 0; jndex < neighbor_nodes.length; jndex++) {
-            const element = neighbor_nodes[jndex];
-            
+            cur_node = neighbor_nodes[jndex];
+            let cur_id = cur_node.id;
+            cur_node.classList.add("visiting")
+
+            current_distance = distances[current_id] + 1;
+
+            if (current_distance < distances[cur_id]) {
+                distances[cur_id] = current_distance
+            }
         }
 
+        if (node.classList.contains("end")) {
 
+            while (true)
+            {
+                const nodes = neighboring_nodes(node.id.split("_"), "visited")
+                let shortest = Infinity;
+                for (let index = 0; index < nodes.length; index++) {
+                    const element = nodes[index];
+                }
+
+                for (let index = 0; index < nodes.length; index++) {
+                    const current_node = nodes[index];
+                    distance = distances[current_node.id]
+                    if (distance < shortest) {
+                        shortest = distances[current_node.id]
+                        node = current_node;
+                    }
+                    await sleep(10)
+                }
+
+                if (node.classList.contains("start")) {
+                    return;
+                }
+
+                node.classList.remove("visited");
+                node.classList.add("path");
+            }
+        }
+
+        if (node.classList.contains("visiting")) {
+            node.classList.remove("visiting");
+        }
+        node.classList.remove("unvisited");
+        node.classList.add("visited");
+        await sleep(0)
 
     }
 }
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 function distance(start, pos) {
     return Math.abs(start[0] - pos[0]) + Math.abs(start[1] - pos[1]);
 }
 
-function neighboring_nodes(pos) {
+function neighboring_nodes(pos, find_with) {
     pos_x = pos[0];
     pos_y = pos[1];
 
@@ -126,8 +196,8 @@ function neighboring_nodes(pos) {
                 continue;
             }
             
-            if (tile.classList.contains("unvisited")) {
-                squares.push([temp_x, temp_y]);
+            if (tile.classList.contains(find_with)) {
+                squares.push(tile);
             }
 
         }
@@ -137,4 +207,4 @@ function neighboring_nodes(pos) {
 
 let table = create_grid();
 
-setInterval(function() { find_path("dijkstra") }, 1000)
+dijkstra();
