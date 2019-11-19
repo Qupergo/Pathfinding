@@ -43,12 +43,12 @@ function create_grid() {
 
             //Place start node
             if (x == 10 && y == 20) {
-                td.className = "bg-info start unvisited";
+                td.className = "start unvisited";
             }
 
             //Place end node
             if (x == 30 && y == 20) {
-                td.className = "bg-danger end unvisited";
+                td.className = "end unvisited";
             }
             td.id = x + "_" + y;
         }
@@ -120,12 +120,12 @@ async function dijkstra () {
         for (let jndex = 0; jndex < neighbor_nodes.length; jndex++) {
             cur_node = neighbor_nodes[jndex];
             let cur_id = cur_node.id;
-            cur_node.classList.add("visiting")
+            cur_node.classList.add("visiting");
 
             current_distance = distances[current_id] + 1;
 
             if (current_distance < distances[cur_id]) {
-                distances[cur_id] = current_distance
+                distances[cur_id] = current_distance;
             }
         }
 
@@ -141,12 +141,12 @@ async function dijkstra () {
 
                 for (let index = 0; index < nodes.length; index++) {
                     const current_node = nodes[index];
-                    distance = distances[current_node.id]
+                    distance = distances[current_node.id];
                     if (distance < shortest) {
-                        shortest = distances[current_node.id]
+                        shortest = distances[current_node.id];
                         node = current_node;
                     }
-                    await sleep(10)
+                    await sleep(10);
                 }
 
                 if (node.classList.contains("start")) {

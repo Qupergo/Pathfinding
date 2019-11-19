@@ -11,7 +11,6 @@ table tr td:hover {
 }
 
 .wall {
-
     transition: transform 100ms ease;
     background-color: #424949;
 }
@@ -28,4 +27,11 @@ table tr td:hover {
     transition: transform 100ms ease;
     transform: scale(0.5);
     background-color: #822E81 !important;
+    border-radius: 50%;
+}
+
+.end {
+    background-color: inherit;
+    background-size: contain;
+
 }
