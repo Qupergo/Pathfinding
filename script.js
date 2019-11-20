@@ -1,6 +1,8 @@
 
 let isMouseDown = false;
 let right_click = false;
+let algorithm_in_progress = false;
+let refreshing = false;
 
 document.onmousedown = () => isMouseDown = true; ;
 document.onmouseup   = function() { isMouseDown = false; right_click = false; };
@@ -25,6 +27,7 @@ function mouseDown(e) {
 }
 
 function refresh_grid() {
+    refreshing = true;
     for (let y = 0; y < 100; y++) {
         for (let x = 0; x < 100; x++) {
             let tile = document.getElementById(x + "_" + y);
@@ -47,6 +50,8 @@ function refresh_grid() {
         }
         
     }
+    algorithm_in_progress = false;
+    refreshing = false;
 }
 
 function create_grid() {
@@ -108,6 +113,10 @@ function place_object (td, type, isRightClick, clicked=false) {
 }
 
 async function dijkstra (speed) {
+    if (algorithm_in_progress) {
+        return; //Don't run more than one algorithm at a time
+    }
+    algorithm_in_progress = true;
     let start = document.querySelector(".start");
     let end = document.querySelector(".end");
 
@@ -134,6 +143,9 @@ async function dijkstra (speed) {
     let iter = 0;
 
     while (true) {
+        if (refreshing) {
+            return; //Stop algorithm if trying to reset algorithms
+        }
         iter++;
         
         let shortest_distance = Infinity;
@@ -222,6 +234,10 @@ async function dijkstra (speed) {
 }
 
 async function greedy (speed) {
+    if (algorithm_in_progress) {
+        return; //Don't start more than one algorithm at a time
+    }
+    algorithm_in_progress = true;
     actual_dists = {};
     let start = document.querySelector(".start");
     let end = document.querySelector(".end");
@@ -252,6 +268,9 @@ async function greedy (speed) {
     let iter = 0;
 
     while (true) {
+        if (refreshing) {
+            return; //Stop algorithm if trying to reset algorithms
+        }
         iter++;
         
         let shortest_distance = Infinity;
