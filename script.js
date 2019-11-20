@@ -22,7 +22,33 @@ function mouseDown(e) {
   else if (e.which === 3) {
       right_click = true;
   }
+}
 
+function refresh_grid() {
+    for (let y = 0; y < 100; y++) {
+        for (let x = 0; x < 100; x++) {
+            let tile = document.getElementById(x + "_" + y)
+
+            if (tile.classList.contains("start")) {
+                tile.className = "start unvisited";
+                continue;
+            }
+
+            if (tile.classList.contains("end")) {
+                tile.className = "end unvisited";
+                continue;
+            }
+
+            if (tile.classList.contains("wall")) {
+                tile.className = "wall";
+                continue;
+            }
+
+            tile.className = "unvisited";
+
+        }
+        
+    }
 }
 
 function create_grid() {
@@ -50,6 +76,11 @@ function create_grid() {
             if (x == 30 && y == 20) {
                 td.className = "end unvisited";
             }
+
+            if (x == 60 && y < 41 || y == 40 && x < 60) {
+                td.className = "wall";
+            }
+
             td.id = x + "_" + y;
         }
         table.appendChild(tr);
@@ -60,8 +91,13 @@ function create_grid() {
 
 function place_object (td, type, isRightClick, clicked=false) {
 
+    if (td.classList.contains("start") || td.classList.contains("end")){
+        return
+    }
+
     if (isMouseDown || clicked)
     {
+
         if (isRightClick) {
             td.className = "unvisited";
         }
@@ -73,7 +109,7 @@ function place_object (td, type, isRightClick, clicked=false) {
     }
 }
 
-async function dijkstra () {
+async function dijkstra (speed) {
     let start = document.querySelector(".start");
     let end = document.querySelector(".end");
 
@@ -113,7 +149,6 @@ async function dijkstra () {
             if (distances[id] < shortest_distance) {
                 shortest_distance = distances[id]
                 node = selected_node;
-                console.log(node.id);
             }
         }
 
@@ -133,7 +168,6 @@ async function dijkstra () {
             }
         }
 
-
         if (node.classList.contains("visiting")) {
             node.classList.remove("visiting");
         }
@@ -152,12 +186,14 @@ async function dijkstra () {
 
                 for (let index = 0; index < nodes.length; index++) {
                     const current_node = nodes[index];
-                    distance = distances[current_node.id];
-                    if (distance < shortest) {
+                    dist = distances[current_node.id];
+                    if (dist < shortest) {
                         shortest = distances[current_node.id];
                         node = current_node;
                     }
-                    await sleep(10);
+                    if (speed !== "fastest") {
+                        await sleep(10);
+                    }
                 }
 
                 if (node.classList.contains("start")) {
@@ -168,22 +204,159 @@ async function dijkstra () {
                 node.classList.add("path");
             }
         }
-        
+        if (speed === "slow") {
+            await sleep(500);
+        }
+
+        if (speed === "mid") {
+            await sleep(100);
+        }
+
+        if (speed === "fast") {
+            await sleep(0);
+        }
+
+        if (speed === "fastest") {
+            //Do nothing
+        }
         nodes.remove(node);
-        await sleep(0)
     }
 }
+
+async function greedy (speed) {
+    actual_dists = {};
+    let start = document.querySelector(".start");
+    let end = document.querySelector(".end");
+
+    nodes = document.querySelectorAll(".unvisited");
+
+    start_pos = start.id.split("_");
+    id = start.id;
+    end_pos = end.id.split("_");
+
+    let distances = {};
+
+    for (let index = 0; index < nodes.length; index++) {
+        
+        const node = nodes[index];
+        let current_id = node.id;
+        if (node.classList.contains("start"))
+        {
+            distances[current_id] = 0;
+            actual_dists[current_id] = 0;
+        }
+        else {
+            distances[current_id] = Infinity;
+            actual_dists[current_id] = Infinity;
+        }
+    }
+    nodes = Array.from(nodes);
+    let iter = 0;
+
+    while (true) {
+        iter++;
+        
+        let shortest_distance = Infinity;
+        let selected_node;
+        
+        //Select current node
+        for (let index = 0; index < nodes.length; index++) {
+            selected_node = nodes[index];
+            const id = nodes[index].id;
+
+            if (distances[id] < shortest_distance) {
+                shortest_distance = distances[id]
+                node = selected_node;
+            }
+
+  
+        }
+
+        const current_pos = node.id.split("_");
+        const current_id = node.id;
+        let neighbor_nodes = neighboring_nodes(current_pos, "unvisited");
+        
+        for (let jndex = 0; jndex < neighbor_nodes.length; jndex++) {
+            cur_node = neighbor_nodes[jndex];
+            let cur_id = cur_node.id;
+            cur_node.classList.add("visiting");
+
+            current_distance = distance(end_pos, cur_id.split("_"));
+
+            distances[cur_id] = current_distance;
+
+            current_distance = actual_dists[current_id] + 1;
+
+            if (current_distance < actual_dists[cur_id]) {
+                actual_dists[cur_id] = current_distance;
+            }
+        }
+
+        if (node.classList.contains("visiting")) {
+            node.classList.remove("visiting");
+        }
+        node.classList.remove("unvisited");
+        node.classList.add("visited");
+
+        if (node.classList.contains("end")) {
+
+            while (true)
+            {
+                const nodes = neighboring_nodes(node.id.split("_"), "visited")
+                let shortest = Infinity;
+                
+
+
+                for (let index = 0; index < nodes.length; index++) {
+                    const current_node = nodes[index];
+                    dist = actual_dists[current_node.id];
+                    if (dist < shortest) {
+                        shortest = actual_dists[current_node.id];
+                        node = current_node;
+                    }
+                    if (speed !== "fastest") {
+                        await sleep(10);
+                    }
+                }
+
+                if (node.classList.contains("start")) {
+                    return;
+                }
+
+                node.classList.remove("visited");
+                node.classList.add("path");
+            }
+        }
+        if (speed === "slow") {
+            await sleep(500);
+        }
+
+        if (speed === "mid") {
+            await sleep(100);
+        }
+
+        if (speed === "fast") {
+            await sleep(0);
+        }
+
+        if (speed === "fastest") {
+            //Do nothing
+        }
+        nodes.remove(node); 
+    }
+}
+
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
-function distance(start, pos) {
-    return Math.abs(start[0] - pos[0]) + Math.abs(start[1] - pos[1]);
+function distance(end, pos) {
+    return Math.abs(end[0] - pos[0]) + Math.abs(end[1] - pos[1]);
 }
 
-function neighboring_nodes(pos, find_with) {
+function neighboring_nodes(pos, find_with, find_end = true) {
     pos_x = pos[0];
     pos_y = pos[1];
 
@@ -201,7 +374,11 @@ function neighboring_nodes(pos, find_with) {
             if (tile === null) {
                 continue;
             }
-            
+
+            if (!find_end && tile.classList.contains("end")) {
+                continue;
+            }
+
             if (tile.classList.contains(find_with)) {
                 squares.push(tile);
             }
@@ -224,4 +401,3 @@ Array.prototype.remove = function() {
 
 let table = create_grid();
 
-dijkstra();

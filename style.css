@@ -41,6 +41,7 @@ table tr td:hover {
 }
 
 .start {
+    background-color: inherit;
     background-image: url(images/start.png);
     background-size: contain;
 }
