@@ -27,7 +27,7 @@ function mouseDown(e) {
 function refresh_grid() {
     for (let y = 0; y < 100; y++) {
         for (let x = 0; x < 100; x++) {
-            let tile = document.getElementById(x + "_" + y)
+            let tile = document.getElementById(x + "_" + y);
 
             if (tile.classList.contains("start")) {
                 tile.className = "start unvisited";
@@ -43,9 +43,7 @@ function refresh_grid() {
                 tile.className = "wall";
                 continue;
             }
-
             tile.className = "unvisited";
-
         }
         
     }
