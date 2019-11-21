@@ -14,13 +14,63 @@
   </head>
   <body ondragstart="return false;" ondrop="return false;" onmousedown="mouseDown(event);" class="bg-light">
 
-    <button class="btn btn-info" onclick="greedy('fast')">Visualise Greedy</button>
-    <button class="btn btn-info" onclick="dijkstra('fast')">Visualise Dijkstra</button>
+    <div class="buttons row">
+      <!-- Pathfinding Algorithm Dropdown Buttons -->
+      <div class="btn-group mx-4">
+        <button onclick="find_path('path_loader')" id="pathfinding" type="button" class="btn btn-info">Pathfinding Algorithm: Dijkstra</button>
+        <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu">
+          <a onclick="changeText('pathfinding', 'Pathfinding Algorithm: Dijkstra')" class="dropdown-item" href="#">Dijkstra</a>
+          <a onclick="changeText('pathfinding', 'Pathfinding Algorithm: Greedy')" class="dropdown-item" href="#">Greedy-first</a>
+          <a onclick="changeText('pathfinding', 'Pathfinding Algorithm: A*')" class="dropdown-item" href="#">A*</a>
+        </div>
+        
+      </div>
 
-    <button class="btn btn-danger" onclick="refresh_grid()">Reset Algorithm</button>
+        <!-- Maze Algorithm Dropdown Buttons -->
+        <div class="btn-group mx-4">
+          <button onclick="generate_maze('maze_loader')" id="maze" type="button" class="btn btn-success">Maze: Prim</button>
+          <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <div class="dropdown-menu">
+            <a onclick="changeText('maze', 'Maze: Prim')" class="dropdown-item" href="#">Prim</a>
+            <a onclick="changeText('maze', 'Maze: Hunt')" class="dropdown-item" href="#">Hunt and kill</a>
+            <a onclick="changeText('maze', 'Maze: Recursive')" class="dropdown-item" href="#">Recursive</a>
+          </div>
+        </div>
 
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/e7a2e635f6.js" crossorigin="anonymous"></script>
+        <!-- Speed Dropdown Buttons -->
+        <div class="btn-group mx-4">
+          <button id="speed" type="button" class="btn btn-warning">Speed: Fast</button>
+          <button type="button" class="btn btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <div class="dropdown-menu">
+            <a onclick="changeText('speed', 'Speed: Fast')" class="dropdown-item" href="#">Fast</a>
+            <a onclick="changeText('speed', 'Speed: Mid')" class="dropdown-item" href="#">Mid</a>
+            <a onclick="changeText('speed', 'Speed: Slow')" class="dropdown-item" href="#">Slow</a>
+            <div class="dropdown-divider"></div>
+            <a onclick="changeText('speed', 'Speed: Instant')" class="dropdown-item" href="#">Instant</a>
+          </div>
+
+        </div>
+
+
+      <button class="btn btn-danger mx-4" onclick="refresh_grid()">Reset Algorithm</button>
+      <button class="btn btn-danger mx-4" onclick="reset_grid()">Reset Grid</button>
+
+    </div>
+    <div id="path_loader" class="spinner-grow loading text-info" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+
+    <div id="maze_loader" class="spinner-grow text-success loading" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

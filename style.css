@@ -46,3 +46,10 @@ table tr td:hover {
     background-size: contain;
 }
 
+.loading {
+    display: none;
+}
+
+.loading_show {
+    display: block;
+}
