@@ -55,21 +55,23 @@
             <div class="dropdown-divider"></div>
             <a onclick="changeText('speed', 'Speed: Instant')" class="dropdown-item" href="#">Instant</a>
           </div>
-
+        </div>
+        <button class="btn btn-danger mx-4" onclick="refresh_grid()">Reset Algorithm</button>
+        <button class="btn btn-danger mx-4" onclick="reset_grid()">Reset Grid</button>
+        
+        <div id="path_loader" class="spinner-grow loading text-info" role="status">
+          <span class="sr-only">Loading...</span>
         </div>
 
+        <div id="maze_loader" class="spinner-grow text-success loading" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
 
-      <button class="btn btn-danger mx-4" onclick="refresh_grid()">Reset Algorithm</button>
-      <button class="btn btn-danger mx-4" onclick="reset_grid()">Reset Grid</button>
+      </div>
 
-    </div>
-    <div id="path_loader" class="spinner-grow loading text-info" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
 
-    <div id="maze_loader" class="spinner-grow text-success loading" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
+
+
 
 
     <!-- Optional JavaScript -->
