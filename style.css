@@ -13,17 +13,17 @@ table tr td:hover {
 .wall {
     transition: transform 100ms ease;
     background-color: #424949;
+    border: none !important;
 }
 
 .visited {
-    background-color: #DBF9F4;
+    background-color: #83C9F4;
 }
 
 .visiting {
     transition: transform 100ms ease;
     transform: scale(0.5);
-    background-color: #DAA49A;
-
+    background-color: #A3D5FF;
 }
 
 .path {
