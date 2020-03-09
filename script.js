@@ -93,25 +93,24 @@ async function generate_maze(loadingbar_id) {
 //Refresh grid
 async function refresh_grid() {
     refreshing = true;
-    for (let y = 0; y < size[1]; y++) {
-        for (let x = 0; x < size[0]; x++) {
+    for (let y = 0; y <= size[1]; y++) {
+        for (let x = 0; x <= size[0]; x++) {
             let tile = document.getElementById(x + "_" + y);
 
             if (tile.classList.contains("start")) {
                 tile.className = "start unvisited";
-                continue;
             }
 
-            if (tile.classList.contains("end")) {
+            else if (tile.classList.contains("end")) {
                 tile.className = "end unvisited";
-                continue;
             }
 
-            if (tile.classList.contains("wall")) {
+            else if (tile.classList.contains("wall")) {
                 tile.className = "wall";
-                continue;
             }
-            tile.className = "unvisited";
+            else {
+                tile.className = "unvisited";
+            }
         }
         
     }
@@ -120,20 +119,20 @@ async function refresh_grid() {
 }
 
 async function reset_grid() {
-    for (let y = 0; y < size[1]; y++) {
-        for (let x = 0; x < size[0]; x++) {
+    for (let y = 0; y <= size[1]; y++) {
+        for (let x = 0; x <= size[0]; x++) {
             let tile = document.getElementById(x + "_" + y);
 
             if (tile.classList.contains("start")) {
                 tile.className = "start unvisited";
-                continue;
             }
 
-            if (tile.classList.contains("end")) {
+            else if (tile.classList.contains("end")) {
                 tile.className = "end unvisited";
-                continue;
             }
-            tile.className = "unvisited";
+            else {
+                tile.className = "unvisited";
+            }
         }
         
     }
@@ -151,7 +150,7 @@ function set_size(size) {
             if (x > size[0] || y > size[1]) {
                 td.style.visibility = "hidden";
                 td.className = "wall";
-                td.id = ""
+                td.id = "";
             }
         }
     }
@@ -545,7 +544,6 @@ async function prim(speed) {
 async function hunt_and_kill(speed) {
     prepare_maze()
     let start = document.querySelector(".start");
-    let start_pos = start.id.split("_");
     let prev_node = start;
     let nodes = neighboring_nodes(prev_node.id.split("_"), "node", corners=false, true, 2);
 
@@ -630,8 +628,6 @@ async function kruskal(speed) {
     maze_in_progress = true;
     walls = [];
     maze = [];
-    let start = document.querySelector(".start");
-    let end = document.querySelector(".end");
 
     walls = document.querySelectorAll(".node");
     walls = Array.from(walls);
@@ -704,19 +700,18 @@ function prepare_maze() {
         for (let x = 0; x <= size[0]; x++) {
             let tile = document.getElementById(x + "_" + y)
             if (tile.classList.contains("end")) {
-                tile.classList.add("node")
-                continue;
+                tile.className = "end node"
             }
 
-            if (tile.classList.contains("start")) {
-                continue;
+            else if (tile.classList.contains("start")) {
             }
 
-            if (x % 2 === 0 && y % 2 === 0) {
+            else if (x % 2 === 0 && y % 2 === 0) {
                 tile.className = "node wall"
-                continue;
             }
-            tile.className = "wall";
+            else {
+                tile.className = "wall";
+            }
         }
     }
 }
@@ -724,7 +719,6 @@ function prepare_maze() {
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
 
 function distance(end, pos) {
     return Math.abs(end[0] - pos[0]) + Math.abs(end[1] - pos[1]);

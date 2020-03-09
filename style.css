@@ -13,6 +13,7 @@ table tr td:hover {
 .wall {
     transition: transform 100ms ease;
     background-color: #424949;
+    border: #424949 5px solid;
     border: none !important;
 }
 
